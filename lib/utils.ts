@@ -1,4 +1,4 @@
-import type { Goal, ExchangeRate} from './types'
+import type { ExchangeRate} from './types'
 
 export const formatCurrency = (amount: number, currency: 'INR' | 'USD'): string => {
   if (currency === 'INR') {
