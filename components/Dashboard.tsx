@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { PlusCircle, Target } from "lucide-react";
 
-import { Goal, ExchangeRate } from "@/lib/types";
+import { Goal, Contribution, ExchangeRate } from "@/lib/types";
 
 import GoalCard from "./dashboard/GoalCard";
 import AddGoalModal from "./dashboard/model/AddGoalModal";
+import AddContributionModal from "./dashboard/model/AddContibutionModal";
 
 const Dashboard = () => {
     const [goals, setGoals] = useState<Goal[]>([]);
@@ -16,12 +17,12 @@ const Dashboard = () => {
     const [isLoading, setIsLoading] = useState(false)
 
     const [isAddGoalModalOpen, setIsAddGoalModalOpen] = useState(false);
-    // const [isAddContributionModalOpen, setIsAddContributionModalOpen] = useState(false)
+    const [isAddContributionModalOpen, setIsAddContributionModalOpen] = useState(false)
     const [selectedGoal, setSelectedGoal] = useState<Goal | null>(null);
 
     const saveGoals = (updated: Goal[]) => {
       setGoals(updated)
-      localStorage.setItem('savings-goals', JSON.stringify(updated))
+    //   localStorage.setItem('savings-goals', JSON.stringify(updated))
     }
 
     const addGoal = (
@@ -39,10 +40,33 @@ const Dashboard = () => {
             contributions: [],
             createdAt: new Date(),
         };
-        saveGoals([...goals, newGoal]);
+        saveGoals([newGoal, ...goals]);
         setIsAddGoalModalOpen(false);
         setIsLoading(false);
     };
+
+    const addContribution = (goalId: string, amount: number, date: Date) => {
+      setIsLoading(true)
+      const newContribution: Contribution = { 
+          id: crypto.randomUUID(), 
+          amount, 
+          date, 
+          goalId 
+      }
+      const updatedGoals = goals.map(goal => {
+        if (goal.id === goalId) {
+        return {
+          ...goal,
+          currentAmount: goal.currentAmount + amount,
+          contributions: [...goal.contributions, newContribution]
+        }}
+        return goal
+      })
+      saveGoals(updatedGoals)
+      setIsAddContributionModalOpen(false)
+        setSelectedGoal(null)
+      setIsLoading(false)
+    }
 
     return (
         <div className=" max-w-7xl mx-auto">
@@ -75,7 +99,7 @@ const Dashboard = () => {
                             exchangeRate={exchangeRate}
                             onAddContribution={(goal: Goal) => {
                                 setSelectedGoal(goal);
-                                // setIsAddContributionModalOpen(true)
+                                setIsAddContributionModalOpen(true)
                             }}
                         />
                     ))}
@@ -105,6 +129,17 @@ const Dashboard = () => {
                 onClose={() => setIsAddGoalModalOpen(false)}
                 onAddGoal={addGoal}
                 isLoading={isLoading}
+            />
+
+            <AddContributionModal
+              isOpen={isAddContributionModalOpen}
+              onClose={() => {
+                setIsAddContributionModalOpen(false)
+                setSelectedGoal(null)
+              }}
+              onAddContribution={addContribution}
+              goal={selectedGoal}
+              isLoading={isLoading}
             />
         </div>
     );

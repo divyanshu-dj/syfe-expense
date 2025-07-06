@@ -42,4 +42,9 @@ export const validateGoalName = (name: string): boolean => {
   return name.trim().length > 0 && name.trim().length <= 50
 }
 
+export const calculateProgress = (current: number, target: number): number => {
+  if (target === 0) return 0
+  return Math.min((current / target) * 100, 100)
+}
+
 
