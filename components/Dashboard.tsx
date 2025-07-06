@@ -4,6 +4,7 @@ import { PlusCircle, Target } from "lucide-react";
 import { Goal, Contribution, ExchangeRate } from "@/lib/types";
 
 import GoalCard from "./dashboard/GoalCard";
+import Stats from "./dashboard/Stats";
 import AddGoalModal from "./dashboard/model/AddGoalModal";
 import AddContributionModal from "./dashboard/model/AddContibutionModal";
 
@@ -78,6 +79,11 @@ const Dashboard = () => {
                     Track your financial goals and build your future
                 </p>
             </div>
+
+            <Stats
+              goals={goals}
+            exchangeRate={exchangeRate}
+            />
 
             <div className="bg-white flex items-center justify-between mb-6 p-4 rounded-2xl shadow-md">
                 <h2 className="text-2xl font-bold text-gray-900">Your Goals</h2>
