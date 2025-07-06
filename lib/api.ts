@@ -1,7 +1,7 @@
 import axios from 'axios'
 import type { ExchangeRate } from './types'
 
-const API_KEY = 'a22434de3d32d57cce055972'
+const API_KEY = process.env.NEXT_PUBLIC_EXCHANGE_RATE_API_KEY
 
 export const getExchangeRates = async (): Promise<ExchangeRate> => {
   const response = await axios.get(
